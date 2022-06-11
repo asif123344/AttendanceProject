@@ -79,7 +79,7 @@ namespace AttendanceProject.Data.Migrations
                         column: x => x.SessionId,
                         principalTable: "Session",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                     table.ForeignKey(
                         name: "FK_Attendance_Teacher_TeacherId",
                         column: x => x.TeacherId,
