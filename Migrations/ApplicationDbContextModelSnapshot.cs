@@ -4,16 +4,14 @@ using AttendanceProject.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
-using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
-namespace AttendanceProject.Data.Migrations
+namespace AttendanceProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220610015219_FirstMigration1")]
-    partial class FirstMigration1
+    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
     {
-        protected override void BuildTargetModel(ModelBuilder modelBuilder)
+        protected override void BuildModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -228,6 +226,9 @@ namespace AttendanceProject.Data.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
+                    b.Property<int>("AttendanceId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("IsPresent")
                         .HasColumnType("bit");
 
@@ -236,9 +237,11 @@ namespace AttendanceProject.Data.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("AttendanceId");
+
                     b.HasIndex("StudentId");
 
-                    b.ToTable("Attendance");
+                    b.ToTable("AttendanceRecord");
                 });
 
             modelBuilder.Entity("StudentAttendanceProject.Models.AttendanceModel", b =>
@@ -370,8 +373,8 @@ namespace AttendanceProject.Data.Migrations
             modelBuilder.Entity("StudentAttendanceProject.Models.AttendaceRecordModel", b =>
                 {
                     b.HasOne("StudentAttendanceProject.Models.AttendanceModel", "Attendance")
-                        .WithMany()
-                        .HasForeignKey("Id")
+                        .WithMany("AttendanceRecords")
+                        .HasForeignKey("AttendanceId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 

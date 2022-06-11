@@ -1,0 +1,21 @@
+﻿@using StudentAttendanceProject.Models
+@model List<StudentAttendance>
+
+<form asp-action="AddNewRecord" method="post">
+    <input type="hidden" name="attendanceId" />
+    <table>
+        <tr>
+            <td>Student</td>
+            <td>Present</td>
+        </tr>
+
+        <tr>
+            @for (int i = 0; i < Model.Count - 1; i++)
+            {
+                <td>@Model[i].StudentName</td>
+                <td><input asp-for="@(Model[i].IsPresent)" /></td>
+            }
+        </tr>
+    </table>
+    <button type="submit">Submit</button>
+</form>

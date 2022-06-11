@@ -1,0 +1,9 @@
+﻿@using StudentAttendanceProject.Models
+@model AttendanceModel
+
+
+
+<h3>Date: @Model.AttendanceDate</h3>
+
+<h3>Present: @Model.AttendanceRecords.Count(a=>a.IsPresent)</h3>
+<h3>Absent: @Model.AttendanceRecords.Count(a=>!a.IsPresent)</h3>

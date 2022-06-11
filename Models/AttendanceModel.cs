@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace StudentAttendanceProject.Models
@@ -51,15 +52,18 @@ namespace StudentAttendanceProject.Models
         public int TeacherId { get; set; }
 
         public TeacherModel Teacher { get; set; }
+
+        public IList<AttendaceRecordModel> AttendanceRecords { get; set; }
+
     }
 
-    [Table("Attendance")]
+    [Table("AttendanceRecord")]
     public class AttendaceRecordModel
     {
-
-        [ForeignKey("Attendance")]
         public int Id { get; set; }
 
+        [ForeignKey("Attendance")]
+        public int AttendanceId { get; set; }
         public AttendanceModel Attendance { get; set; }
 
         [ForeignKey("Student")]
@@ -69,5 +73,13 @@ namespace StudentAttendanceProject.Models
 
         public bool IsPresent { get; set; }
 
+    }
+
+    public class StudentAttendance
+    {
+        public string StudentName { get; set; }
+        public int StudentId { get; set; }
+
+        public bool IsPresent { get; set; }
     }
 }

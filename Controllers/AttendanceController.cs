@@ -49,8 +49,8 @@ namespace AttendanceProject.Controllers
         // GET: Attendance/Create
         public IActionResult Create()
         {
-            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Id");
-            ViewData["TeacherId"] = new SelectList(_context.Teacher, "Id", "Id");
+            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Name");
+            ViewData["TeacherId"] = new SelectList(_context.Teacher, "Id", "Name");
             return View();
         }
 
@@ -65,66 +65,54 @@ namespace AttendanceProject.Controllers
             {
                 _context.Add(attendanceModel);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("AddNewRecord", new { attendanceId = attendanceModel.Id });
             }
-            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Id", attendanceModel.SessionId);
-            ViewData["TeacherId"] = new SelectList(_context.Teacher, "Id", "Id", attendanceModel.TeacherId);
-            return View(attendanceModel);
+            return RedirectToAction("Index");
         }
 
-        // GET: Attendance/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public IActionResult AddNewRecord(int attendanceId)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+            AttendanceModel attendanceModel = _context.Attendence.Where(a => a.Id == attendanceId).FirstOrDefault();
 
-            var attendanceModel = await _context.Attendence.FindAsync(id);
-            if (attendanceModel == null)
+            List<StudentModel> students = _context.Student.Where(a => a.SessionId == attendanceModel.SessionId).ToList();
+
+            var recordList = new List<StudentAttendance>();
+            foreach (var item in students)
             {
-                return NotFound();
+                recordList.Add(new StudentAttendance
+                {
+                    IsPresent = false,
+                    StudentId = item.Id,
+                    StudentName = item.Name
+                });
             }
-            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Id", attendanceModel.SessionId);
-            ViewData["TeacherId"] = new SelectList(_context.Teacher, "Id", "Id", attendanceModel.TeacherId);
-            return View(attendanceModel);
+            ViewBag.AttendanceId = attendanceId;
+            return View(recordList);
         }
 
-        // POST: Attendance/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to, for 
-        // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,AttendanceDate,SessionId,TeacherId")] AttendanceModel attendanceModel)
+        public IActionResult AddNewRecord(List<StudentAttendance> attendance, int attendanceId)
         {
-            if (id != attendanceModel.Id)
+            foreach (var item in attendance)
             {
-                return NotFound();
-            }
+                AttendaceRecordModel record = new AttendaceRecordModel
+                {
+                    IsPresent = item.IsPresent,
+                    StudentId = item.StudentId,
+                    AttendanceId = attendanceId
+                };
 
-            if (ModelState.IsValid)
-            {
-                try
-                {
-                    _context.Update(attendanceModel);
-                    await _context.SaveChangesAsync();
-                }
-                catch (DbUpdateConcurrencyException)
-                {
-                    if (!AttendanceModelExists(attendanceModel.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
-                }
-                return RedirectToAction(nameof(Index));
+                _context.AttendaceRecord.Add(record);
+                _context.SaveChanges();
             }
-            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Id", attendanceModel.SessionId);
-            ViewData["TeacherId"] = new SelectList(_context.Teacher, "Id", "Id", attendanceModel.TeacherId);
-            return View(attendanceModel);
+            return RedirectToAction("ShowData", new { attendanceId = attendanceId });
+        }
+
+
+        public IActionResult ShowData(int attendanceId)
+        {
+            return View(_context.Attendence.Include(a => a.AttendanceRecords).Where(a => a.Id == attendanceId).FirstOrDefault());
         }
 
         // GET: Attendance/Delete/5
