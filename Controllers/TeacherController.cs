@@ -20,9 +20,10 @@ namespace AttendanceProject.Controllers
         }
 
         // GET: Teacher
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Teacher.ToListAsync());
+            //select * from teacher
+            return View(_context.Teacher.ToList());
         }
 
         // GET: Teacher/Details/5
@@ -33,8 +34,9 @@ namespace AttendanceProject.Controllers
                 return NotFound();
             }
 
-            var teacherModel = await _context.Teacher
-                .FirstOrDefaultAsync(m => m.Id == id);
+            //select top 1 * from teacher where id = id
+            //lamda expression
+            var teacherModel = await _context.Teacher.FirstOrDefaultAsync(m => m.Id == id);
             if (teacherModel == null)
             {
                 return NotFound();
@@ -54,10 +56,11 @@ namespace AttendanceProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Name")] TeacherModel teacherModel)
+        public async Task<IActionResult> Create(TeacherModel teacherModel)
         {
             if (ModelState.IsValid)
             {
+                //insert into 
                 _context.Add(teacherModel);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -86,7 +89,7 @@ namespace AttendanceProject.Controllers
         // more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Name")] TeacherModel teacherModel)
+        public async Task<IActionResult> Edit(int id, TeacherModel teacherModel)
         {
             if (id != teacherModel.Id)
             {

@@ -48,7 +48,7 @@ namespace AttendanceProject.Controllers
         // GET: Student/Create
         public IActionResult Create()
         {
-            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Id");
+            ViewData["SessionId"] = new SelectList(_context.Session, "Id", "Name");
             return View();
         }
 

@@ -2,20 +2,21 @@
 @model List<StudentAttendance>
 
 <form asp-action="AddNewRecord" method="post">
-    <input type="hidden" name="attendanceId" />
-    <table>
+    <input type="hidden" name="attendanceId" value="@ViewBag.AttendanceId" />
+    <table class="table table-responsive">
         <tr>
             <td>Student</td>
             <td>Present</td>
         </tr>
 
-        <tr>
-            @for (int i = 0; i < Model.Count - 1; i++)
-            {
+        @for (int i = 0; i < Model.Count; i++)
+        {
+            <tr>
+                <input type="hidden" asp-for="@(Model[i].StudentId)" />
                 <td>@Model[i].StudentName</td>
                 <td><input asp-for="@(Model[i].IsPresent)" /></td>
-            }
-        </tr>
+            </tr>
+        }
     </table>
     <button type="submit">Submit</button>
 </form>
