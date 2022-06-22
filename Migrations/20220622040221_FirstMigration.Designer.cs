@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AttendanceProject.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20220611034802_InitialDb")]
-    partial class InitialDb
+    [Migration("20220622040221_FirstMigration")]
+    partial class FirstMigration
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {

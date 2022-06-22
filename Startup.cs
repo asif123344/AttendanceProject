@@ -62,7 +62,7 @@ namespace AttendanceProject
             {
                 endpoints.MapControllerRoute(
                     name: "default",
-                    pattern: "{controller=Session}/{action=Index}/{id?}");
+                    pattern: "{controller=Attendance}/{action=Index}/{id?}");
                 endpoints.MapRazorPages();
             });
         }
