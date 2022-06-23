@@ -74,7 +74,6 @@ namespace StudentAttendanceProject.Models
         public bool IsPresent { get; set; }
 
     }
-
     public class StudentAttendance
     {
         public string StudentName { get; set; }
